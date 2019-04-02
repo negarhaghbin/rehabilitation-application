@@ -27,7 +27,7 @@ public class changeMaterial : MonoBehaviour
     }
 
     void Update(){
-        if (((target.transform.position.x-0.5)<current.transform.position.x) & ((target.transform.position.x+0.5)>current.transform.position.x) & ((target.transform.position.y-0.5)< current.transform.position.y) & ((target.transform.position.y+0.5)> current.transform.position.y)){
+        if (rend.sharedMaterial==materials[0] & ((target.transform.position.x-0.5)<current.transform.position.x) & ((target.transform.position.x+0.5)>current.transform.position.x) & ((target.transform.position.z-0.5)< current.transform.position.z) & ((target.transform.position.z+0.5)> current.transform.position.z)){
             rend.sharedMaterial=materials[1];
         }
         if(rend.sharedMaterial==materials[1]){

@@ -12,8 +12,13 @@ public class changeMaterial : MonoBehaviour
     Renderer rend;
     public GameObject button;
     public GameObject target;
-    private GameObject current;
     public int blocks;
+    public AudioClip blop;
+
+    private GameObject current;
+    private AudioSource source;
+    private float volLowRange = .5f;
+    private float volHighRange = 1.0f;
 
     void Start()
     {
@@ -26,6 +31,10 @@ public class changeMaterial : MonoBehaviour
             
     }
 
+    void Awake () {
+        source = GetComponent<AudioSource>();
+    }
+
     void Update(){
         if (rend.sharedMaterial==materials[0] & ((target.transform.position.x-0.5)<current.transform.position.x) & ((target.transform.position.x+0.5)>current.transform.position.x) & ((target.transform.position.z-0.5)< current.transform.position.z) & ((target.transform.position.z+0.5)> current.transform.position.z)){
             rend.sharedMaterial=materials[1];
@@ -34,6 +43,8 @@ public class changeMaterial : MonoBehaviour
             rend.sharedMaterial=materials[2];
             string number=current.name.Substring(2);
             int x=Int32.Parse(number);
+            float vol = UnityEngine.Random.Range (volLowRange, volHighRange);
+            source.PlayOneShot(blop,vol);
             if(x<blocks){
                 x=x+1;
                 string newlp = "lp"+x.ToString();

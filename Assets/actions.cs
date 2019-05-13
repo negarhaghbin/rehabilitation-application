@@ -7,7 +7,7 @@ public class actions : MonoBehaviour
 {
     public void Arkanoid()
     {
-        SceneManager.LoadScene("Scenes/Arkanoid");
+        SceneManager.LoadScene("Scenes/Arkanoidmenu");
     }
 
     public void ABC()

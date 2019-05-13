@@ -9,12 +9,18 @@ public class BallController : MonoBehaviour
     public float speed;
     public Text countText;
     public Text lastText;
-    public GameObject button;
+    public GameObject restartB;
+    public GameObject continueB;
     public GameObject northWall;
-    private float initialY,initialZ;
+    public AudioClip blop;
 
+    private float initialY,initialZ;
     private int count;
     private Rigidbody rb;
+    private GameObject[] blocks;
+    private AudioSource source;
+    private float volLowRange = .5f;
+    private float volHighRange = 1.0f;
 
     void Start ()
     {
@@ -29,21 +35,29 @@ public class BallController : MonoBehaviour
         initialZ= this.transform.position.z;
         Vector3 movement = new Vector3 (30,0.0f,50);
         rb.AddForce (movement * speed);
-        button.SetActive(false);
+        restartB.SetActive(false);
+        continueB.SetActive(false);
+        blocks = GameObject.FindGameObjectsWithTag("brick");
 
+    }
+
+    void Awake () {
+        source = GetComponent<AudioSource>();
     }
 
     void Update(){
         checkLoser();
         float x=transform.position.x;
         transform.localPosition.Set(x,initialY,initialZ);
-        //countText.text=Input.gyro.enabled.ToString();
+        countText.text=Input.acceleration.ToString();
     }
 
     void OnTriggerEnter(Collider other) 
     {
         if (other.gameObject.CompareTag ("brick"))
         {
+            float vol = Random.Range (volLowRange, volHighRange);
+            source.PlayOneShot(blop,vol);
             other.gameObject.SetActive (false);
             count=count+1;
             SetCountText();
@@ -51,18 +65,21 @@ public class BallController : MonoBehaviour
     }
 
     void SetCountText(){
-        
-        if (count>=17){
-            lastText.text="You won!";
-            rb.constraints = RigidbodyConstraints.FreezeAll;
+        if(blocks!=null){
+            if (count>=blocks.Length){
+                lastText.text="You won!";
+                rb.constraints = RigidbodyConstraints.FreezeAll;
+                continueB.SetActive(true);
+            }
         }
+        
     }
 
     void checkLoser(){
         if(this.transform.localPosition.y < -(northWall.transform.localPosition.y+1)){
             lastText.text="You lose!";
             rb.constraints = RigidbodyConstraints.FreezeAll;
-            button.SetActive(true);
+            restartB.SetActive(true);
         }
     }
 }
